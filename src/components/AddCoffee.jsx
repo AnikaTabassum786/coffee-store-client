@@ -1,7 +1,8 @@
 import React from 'react';
+import Swal from 'sweetalert2';
 
 const AddCoffee = () => {
-    const handleClick=(e)=>{
+    const handleClick = (e) => {
         e.preventDefault();
 
         const form = e.target;
@@ -12,17 +13,28 @@ const AddCoffee = () => {
 
         // send Coffee data to DB
 
-        fetch('http://localhost:3000/coffee',{
-            method:'POST',
-            headers:{
-                'content-type':'application/json'
+        fetch('http://localhost:3000/coffee', {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json'
             },
-            body:JSON.stringify(newCoffee)
+            body: JSON.stringify(newCoffee)
         })
-        .then(res=>res.json())
-        .then(data=>{
-            console.log(data)
-        })
+            .then(res => res.json())
+            .then(data => {
+
+                if (data.insertedId) {
+                    console.log(data)
+                    Swal.fire({
+                        title: "Coffee Added Successfully!",
+                        // text: "You clicked the button!",
+                        icon: "success"
+                    });
+
+                    form.reset()
+                }
+
+            })
 
 
 
@@ -47,19 +59,19 @@ const AddCoffee = () => {
                     </fieldset>
                 </div>
 
-                 <div className='grid grid-cols-1 md:grid-cols-2'>
+                <div className='grid grid-cols-1 md:grid-cols-2'>
                     <fieldset className="p-4">
                         <input name='supplier' type="text" className="input" placeholder="Supplier" />
                     </fieldset>
 
                     <fieldset className="p-4">
-                        <input  name='taste' type="text" className="input" placeholder="Taste" />
+                        <input name='taste' type="text" className="input" placeholder="Taste" />
                     </fieldset>
                 </div>
 
-                 <div className='grid grid-cols-1 md:grid-cols-2'>
+                <div className='grid grid-cols-1 md:grid-cols-2'>
                     <fieldset className="p-4">
-                        <input name='category' type="text" className="input" placeholder="Category" />
+                        <input name='price' type="text" className="input" placeholder="Price" />
                     </fieldset>
 
                     <fieldset className="p-4">
