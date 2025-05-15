@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router';
 import Swal from 'sweetalert2';
 
-const CoffeeCard = ({ coffee }) => {
+const CoffeeCard = ({ coffee, coffees, setCoffees }) => {
     const { _id, name, photo } = coffee
 
     const handleDelete = (id) => {
@@ -18,32 +18,32 @@ const CoffeeCard = ({ coffee }) => {
             confirmButtonText: "Yes, delete it!"
         }).then((result) => {
             console.log(result.isConfirmed)
-            fetch(`http://localhost:3000/coffee/${_id}`,{
-                method:'DELETE'
+
+            if(result.isConfirmed){
+ fetch(`http://localhost:3000/coffee/${_id}`, {
+                method: 'DELETE'
             })
-            .then(res=>res.json())
-            .then(data=>{
-                
-                if(data.deletedCount){
-                    Swal.fire({
-                    title: "Deleted!",
-                    text: "Your Coffee has been deleted.",
-                    icon: "success"
-                });
-                   const remainCoffee = coffee.filter(coffee=> coffee._id !== id)
-                   console.log(remainCoffee)
-                }
-            })
+                .then(res => res.json())
+                .then(data => {
+
+                    if (data.deletedCount) {
+                        Swal.fire({
+                            title: "Deleted!",
+                            text: "Your Coffee has been deleted.",
+                            icon: "success"
+                        });
+                        // remove the coffee
+                        const remainCoffee = coffees.filter(coffee => coffee._id !== id)
+                        setCoffees(remainCoffee)
+                    }
+                })
+            }
 
            
 
-            // if (result.isConfirmed) {
-            //     Swal.fire({
-            //         title: "Deleted!",
-            //         text: "Your file has been deleted.",
-            //         icon: "success"
-            //     });
-            // }
+
+
+          
         });
     }
     return (
@@ -60,9 +60,9 @@ const CoffeeCard = ({ coffee }) => {
                 </div>
                 <div className='flex gap-2 items-center'>
                     <Link to={`/coffee/${_id}`}>
-                    <button className='btn'>View</button>
+                        <button className='btn'>View</button>
                     </Link>
-                    <button className='btn'>Edit</button>
+                    <Link to={`/updateCoffee/${_id}`}><button className='btn'>Edit</button></Link>
                     <button onClick={() => handleDelete(_id)} className='btn'>X</button>
                 </div>
             </div>
